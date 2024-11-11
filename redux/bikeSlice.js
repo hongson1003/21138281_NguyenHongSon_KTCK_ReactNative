@@ -11,9 +11,12 @@ const bikeSlice = createSlice({
     addBike: (state, action) => {
       state.bikes.push(action.payload);
     },
+    setBikes: (state, action) => {
+      state.bikes = action.payload;
+    },
   },
 });
 
-export const { addBike } = bikeSlice.actions;
+export const { addBike, setBikes } = bikeSlice.actions;
 
 export default bikeSlice.reducer;

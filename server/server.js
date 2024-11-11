@@ -1,60 +1,30 @@
-// server.js
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-
 const app = express();
-const PORT = 3000;
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-// Middleware để parse JSON
-app.use(express.json());
+app.use(cors());
 
-// Cấu hình multer để lưu ảnh vào thư mục public/images
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Tên file là unique ID + đuôi file
-  },
-});
+const bikes = [];
 
-const upload = multer({ storage: storage });
+app.use(bodyParser.json({ limit: "10000mb" })); // Đảm bảo có thể nhận chuỗi Base64 lớn
 
-// Array lưu thông tin xe đạp (hoặc thay bằng database thật)
-let bikes = [];
-
-// API để tạo một chiếc xe đạp mới
-app.post("/api/bikes", upload.single("image"), (req, res) => {
-  const { name, price, description } = req.body;
-  const image = req.file;
+app.post("/api/bikes", (req, res) => {
+  const { name, price, description, image } = req.body;
 
   if (!name || !price || !description || !image) {
-    return res
-      .status(400)
-      .json({ message: "Vui lòng cung cấp đầy đủ thông tin." });
+    return res.status(400).json({ message: "Thông tin không đầy đủ!" });
   }
 
-  // Lưu thông tin xe đạp
-  const newBike = {
-    id: bikes.length + 1,
-    name,
-    price,
-    description,
-    image: `/images/${image.filename}`, // Đường dẫn tới ảnh trong thư mục public
-  };
+  bikes.push({ name, price, description, image });
 
-  bikes.push(newBike);
-
-  res.status(201).json({ message: "Tạo xe đạp thành công!", bike: newBike });
+  res.status(201).json({ message: "Tạo xe đạp thành công!" });
 });
 
-// Serve static files từ thư mục public
-app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.get("/api/bikes", (req, res) => {
+  res.status(200).json(bikes);
+});
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });
