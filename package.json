@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "concurrently \"npm run server\" \"npm run start-react\"",
+    "server": "node server/server.js",
+    "start-react": "npm run web",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
@@ -13,6 +15,7 @@
     "@react-navigation/native": "^7.0.0",
     "@react-navigation/native-stack": "^7.0.0",
     "@reduxjs/toolkit": "^2.3.0",
+    "concurrently": "^9.1.0",
     "cors": "^2.8.5",
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",

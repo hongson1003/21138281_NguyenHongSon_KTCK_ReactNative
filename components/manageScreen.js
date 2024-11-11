@@ -20,18 +20,18 @@ const ManageScreen = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAddBike = async () => {
     if (!name || !price || !description || !imageUri) {
-      Alert.alert("Thông báo", "Vui lòng điền đầy đủ thông tin và chọn ảnh.");
+      setErrorMessage("Thông tin không đầy đủ!");
       return;
     }
 
-    // Sửa đây để gửi đúng đối tượng image với uri, type và name
     const image = {
-      uri: imageUri, // Đảm bảo rằng uri đúng
-      type: "image/jpeg", // Chỉ định loại MIME của ảnh (chắc chắn rằng đây là đúng loại ảnh bạn gửi)
-      name: `bike_${Date.now()}.jpg`, // Đặt tên ảnh
+      uri: imageUri,
+      type: "image/jpeg",
+      name: `bike_${Date.now()}.jpg`,
     };
 
     const body = {
@@ -61,11 +61,11 @@ const ManageScreen = ({ navigation }) => {
         navigation.goBack(); // Quay lại HomeScreen
       } else {
         const errorData = await response.json();
-        Alert.alert("Lỗi", errorData.message || "Tạo xe đạp thất bại.");
+        setErrorMessage("Lỗi: " + errorData.message);
       }
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
-      Alert.alert("Lỗi", "Không thể kết nối đến server.");
+      setErrorMessage("Lỗi khi gọi API");
     }
   };
 
@@ -79,6 +79,11 @@ const ManageScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
+      {errorMessage && (
+        <View style={styles.error}>
+          <Text>{errorMessage}</Text>
+        </View>
+      )}
       {/* Nút trở về Home */}
       <TouchableOpacity
         onPress={() => navigation.goBack()} // Điều hướng về màn hình trước
@@ -167,6 +172,12 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: "#000",
     fontSize: 16,
+  },
+  error: {
+    backgroundColor: "#f8d7da",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
   },
 });
 

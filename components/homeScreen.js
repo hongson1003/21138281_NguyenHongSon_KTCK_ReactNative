@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Button,
   FlatList,
   Text,
   View,
@@ -51,6 +52,7 @@ const HomeScreen = ({ navigation }) => {
           </View>
         )}
       />
+      {/* Cập nhật lại nút "Thêm xe đạp mới" */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate("AddBike")}
@@ -115,19 +117,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
   },
+  // Cập nhật nút "Thêm xe đạp mới"
   addButton: {
     marginTop: 20,
-    backgroundColor: "#ff6f61",
+    backgroundColor: "#ff6f61", // Màu nền nổi bật
     borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 25,
-    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    alignItems: "center", // Căn giữa nội dung nút
     marginBottom: 20,
-    elevation: 4,
+    elevation: 4, // Thêm bóng đổ cho nút
   },
   addButtonText: {
     fontSize: 18,
-    color: "#fff",
+    color: "#fff", // Màu chữ trắng để dễ nhìn
     fontWeight: "bold",
   },
 });
