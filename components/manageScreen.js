@@ -11,12 +11,15 @@ import {
   ScrollView,
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
+import { useDispatch } from "react-redux";
+import { addBike } from "../redux/bikeSlice";
 
 const ManageScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [imageUri, setImageUri] = useState(null);
+  const dispatch = useDispatch();
 
   const handleAddBike = async () => {
     if (!name || !price || !description || !imageUri) {
@@ -38,8 +41,6 @@ const ManageScreen = ({ navigation }) => {
       image: image.uri,
     };
 
-    console.log("body", body);
-
     try {
       const response = await fetch("http://localhost:3000/api/bikes", {
         method: "POST",
@@ -56,6 +57,7 @@ const ManageScreen = ({ navigation }) => {
         setPrice("");
         setDescription("");
         setImageUri(null);
+        dispatch(addBike(result));
         navigation.goBack(); // Quay lại HomeScreen
       } else {
         const errorData = await response.json();

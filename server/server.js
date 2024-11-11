@@ -2,10 +2,11 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const sampleBiles = require("./bikes.json");
 
 app.use(cors());
 
-const bikes = [];
+const bikes = sampleBiles || [];
 
 app.use(bodyParser.json({ limit: "10000mb" })); // Đảm bảo có thể nhận chuỗi Base64 lớn
 
@@ -16,9 +17,17 @@ app.post("/api/bikes", (req, res) => {
     return res.status(400).json({ message: "Thông tin không đầy đủ!" });
   }
 
-  bikes.push({ name, price, description, image });
+  const bike = {
+    id: new Date().toISOString(),
+    name,
+    price,
+    description,
+    image,
+  };
 
-  res.status(201).json({ message: "Tạo xe đạp thành công!" });
+  bikes.push(bike);
+
+  res.status(201).json(bike);
 });
 
 app.get("/api/bikes", (req, res) => {
