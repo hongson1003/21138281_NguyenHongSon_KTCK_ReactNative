@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "install": "concurrently \"npm install\" \"npm install-server",
+    "install-server": "npm i server/",
+    "i": "concurrently \"npm install\" \"npm install-server"
   },
   "keywords": [],
   "author": "",
